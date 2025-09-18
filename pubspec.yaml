@@ -44,6 +44,9 @@ dependencies:
   flutter_staggered_animations: ^1.1.1
   flutter_native_timezone:
     path: packages/flutter_native_timezone
+  rxdart: ^0.28.0
+  timezone: ^0.10.1
+  android_intent_plus: ^6.0.0
 
 dev_dependencies:
   flutter_test:

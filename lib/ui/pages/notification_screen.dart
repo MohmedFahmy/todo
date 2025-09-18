@@ -5,7 +5,7 @@ import '../theme.dart';
 
 
 class NotificationScreen extends StatefulWidget {
-  const NotificationScreen({Key? key, required this.notificationLoad})
+  const NotificationScreen(String payload, {Key? key, required this.notificationLoad})
     : super(key: key);
   final String notificationLoad;
   @override

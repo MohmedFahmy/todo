@@ -58,9 +58,15 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         onPressed: () {
-          NotifyHelper().showNotification(
-            title: "Theme changed",
-            body: "Theme changed to ${Get.isDarkMode ? "Light" : "Dark"}",
+          NotifyHelper().displayNotification(
+            body: 'Theme changed',
+            title: 'Theme changed',
+          );
+
+          NotifyHelper().scheduleNotificationAfterDelay(
+            title: "⏳ إشعار متأخر",
+            body: "ده إشعار ظهر بعد 5 ثواني من الضغط على الزر ✅",
+            seconds: 15,
           );
 
           ThemeServices().switchTheme();
