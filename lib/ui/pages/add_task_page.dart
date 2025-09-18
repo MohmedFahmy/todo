@@ -215,7 +215,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     : index == 1
                     ? const Color(0xFF009688) // Teal (أخضر مزرق)
                     : index == 2
-                    ? const Color(0xFF2196F3) // أزرق سماوي
+                    ? const Color.fromARGB(255, 22, 102, 167) // أزرق سماوي
                     : const Color(0xFF7C4DFF), // بنفسجي مزرق خفيف (Lavender)
                 radius: 14,
                 child: _selectedColor == index

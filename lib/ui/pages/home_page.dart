@@ -124,13 +124,12 @@ class _HomePageState extends State<HomePage> {
           initialSelectedDate: _selectedDate,
           height: 110,
           width: 70,
-          selectedTextColor:
-              theme.colorScheme.onPrimary, // النص المختار يتبع السيم
-          selectionColor: theme.colorScheme.primary, // خلفية اليوم المختار
+          selectedTextColor: Colors.white, // النص المختار يتبع السيم
+          selectionColor: primaryClr, // خلفية اليوم المختار
           monthTextStyle: GoogleFonts.lato(
             textStyle: const TextStyle(
               color: Colors.grey, // ثابت رمادي
-              fontSize: 22,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),

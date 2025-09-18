@@ -114,11 +114,11 @@ class TaskTile extends StatelessWidget {
       case 1:
         return const Color(0xFF009688);
       case 2:
-        return Colors.lightBlueAccent;
+        return Color.fromARGB(255, 22, 102, 167) ;
       case 3:
         return const Color(0xFF7C4DFF);
       default:
-        return Color(0xFF2196F3);
+        return Color.fromARGB(255, 22, 102, 167) ;
     }
   }
 }
