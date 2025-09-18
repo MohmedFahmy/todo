@@ -167,7 +167,7 @@ class _HomePageState extends State<HomePage> {
           var task = _taskController.taskList[index];
           return AnimationConfiguration.staggeredList(
             position: index,
-            duration: const Duration(milliseconds: 1375),
+            duration: const Duration(milliseconds: 500),
             child: SlideAnimation(
               horizontalOffset: 300,
               child: FadeInAnimation(

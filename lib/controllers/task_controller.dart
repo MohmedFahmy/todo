@@ -54,4 +54,10 @@ class TaskController extends GetxController {
     ),
   ];
   getTasks() {}
+
+  Future<int> addTask({required Task task}) async {
+    taskList.add(task);
+    update();
+    return 1;
+  }
 }

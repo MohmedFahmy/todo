@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../controllers/task_controller.dart';
+import '../../models/task.dart';
 import '../theme.dart';
 import '../widgets/button.dart';
 import '../widgets/input_field.dart';
@@ -14,7 +16,7 @@ class AddTaskPage extends StatefulWidget {
 }
 
 class _AddTaskPageState extends State<AddTaskPage> {
-  //  final TaskController _taskController = Get.put(TaskController());
+  final TaskController _taskController = Get.put(TaskController());
   final TextEditingController _titelController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
@@ -58,7 +60,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   onPressed: () {},
                   icon: Icon(
                     Icons.calendar_today_outlined,
-                    color: Get.isDarkMode ? Colors.grey : darkGreyClr,
+                    color: Get.isDarkMode
+                        ? Colors.grey
+                        : darkGreyClr.withOpacity(0.5),
                   ),
                 ),
               ),
@@ -73,7 +77,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         onPressed: () {},
                         icon: Icon(
                           Icons.access_time_outlined,
-                          color: Get.isDarkMode ? Colors.grey : darkGreyClr,
+                          color: Get.isDarkMode
+                              ? Colors.grey
+                              : darkGreyClr.withOpacity(0.5),
                         ),
                       ),
                     ),
@@ -86,7 +92,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         onPressed: () {},
                         icon: Icon(
                           Icons.access_time_outlined,
-                          color: Get.isDarkMode ? Colors.grey : darkGreyClr,
+                          color: Get.isDarkMode
+                              ? Colors.grey
+                              : darkGreyClr.withOpacity(0.5),
                         ),
                       ),
                     ),
@@ -161,7 +169,12 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _colorPalete(),
-                    MyButton(label: 'Create Task', onTap: () {}),
+                    MyButton(
+                      label: 'Create Task',
+                      onTap: () {
+                        _validate();
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -193,6 +206,41 @@ class _AddTaskPageState extends State<AddTaskPage> {
       SizedBox(width: 20),
     ],
   );
+
+  _validate() {
+    if (_titelController.text.isNotEmpty && _noteController.text.isNotEmpty) {
+      _addTaskToDb();
+      Get.back();
+    } else if (_titelController.text.isEmpty || _noteController.text.isEmpty) {
+      Get.snackbar(
+        'Required',
+        'All fields are required !',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Get.isDarkMode ? Colors.white : Colors.grey[900],
+        colorText: pinkClr,
+        icon: Icon(Icons.warning_amber_rounded, color: Colors.red),
+      );
+    } else {
+      print('############# SOMETHING WENT WRONG #############');
+    }
+  }
+
+  _addTaskToDb() async {
+    int value = await _taskController.addTask(
+      task: Task(
+        title: _titelController.text,
+        note: _noteController.text,
+        isCompleted: 0,
+        date: DateFormat.yMd().format(_selectedDate),
+        startTime: _startTime,
+        endTime: _endTime,
+        color: _selectedColor,
+        remind: _selectedRemind,
+        repeat: _selectedRepeat,
+      ),
+    );
+    print('My id is ' + '$value');
+  }
 
   Column _colorPalete() => Column(
     crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:todo/models/task.dart';
 
 class DBHelper {
   static Database? _db;
@@ -27,5 +28,27 @@ class DBHelper {
         debugPrint('Error initializing DB: $e');
       }
     }
+  }
+
+  static Future<int> insert(Task task) async {
+    debugPrint('Inserting task: ');
+    return await _db!.insert(_tableName, task.toJson());
+  }
+
+  static Future<int> delete(Task task) async {
+    debugPrint('Deleting task: ');
+    return await _db!.delete(_tableName, where: 'id = ?', whereArgs: [task.id]);
+  }
+
+  static Future<int> update(int id) async {
+    debugPrint('Updating task: ');
+    return await _db!.rawUpdate(
+      'UPDATE $_tableName SET isCompleted = ? WHERE id = ?',
+      [1, id],
+    );
+  }
+  static Future<List<Map<String, dynamic>>> query() async {
+    debugPrint('Querying tasks: ');
+    return await _db!.query(_tableName);
   }
 }
