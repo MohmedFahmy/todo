@@ -57,7 +57,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 title: 'Date',
                 hint: DateFormat.yMd().format(_selectedDate),
                 widget: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _getDateFromUser();
+                  },
                   icon: Icon(
                     Icons.calendar_today_outlined,
                     color: Get.isDarkMode
@@ -74,7 +76,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       title: 'Start Time',
                       hint: _startTime,
                       widget: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          _getTimeFromUser(isStartTime: true);
+                        },
                         icon: Icon(
                           Icons.access_time_outlined,
                           color: Get.isDarkMode
@@ -89,7 +93,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       title: 'End Time',
                       hint: _endTime,
                       widget: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          _getTimeFromUser(isStartTime: false);
+                        },
                         icon: Icon(
                           Icons.access_time_outlined,
                           color: Get.isDarkMode
@@ -276,4 +282,44 @@ class _AddTaskPageState extends State<AddTaskPage> {
       ),
     ],
   );
+
+  void _getDateFromUser() async {
+    DateTime? _pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(2018),
+      lastDate: DateTime(2030),
+    );
+    if (_pickedDate != null) {
+      setState(() {
+        _selectedDate = _pickedDate;
+      });
+    } else {
+      print('It\'s null or something went wrong');
+    }
+  }
+
+  void _getTimeFromUser({required bool isStartTime}) async {
+    TimeOfDay? _pickedTime = await showTimePicker(
+      context: context,
+      initialTime: isStartTime
+          ? TimeOfDay.fromDateTime(DateTime.now())
+          : TimeOfDay.fromDateTime(
+              DateTime.now().add(const Duration(minutes: 15)),
+            ),
+    );
+
+    String _fromattedTime = _pickedTime!.format(context);
+    if (isStartTime) {
+      setState(() {
+        _startTime = _fromattedTime;
+      });
+    } else if (!isStartTime) {
+      setState(() {
+        _endTime = _fromattedTime;
+      });
+    } else {
+      print('############# SOMETHING WENT WRONG #############');
+    }
+  }
 }
