@@ -27,6 +27,15 @@ class _HomePageState extends State<HomePage> {
   final TaskController _taskController = Get.put(TaskController());
   DateTime _selectedDate = DateTime.now();
   @override
+  void initState() {
+    WidgetsFlutterBinding.ensureInitialized();
+    NotifyHelper notifyHelper = NotifyHelper();
+    notifyHelper.initializeNotification();
+    super.initState();
+    _taskController.getTasks();
+  }
+
+  @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
@@ -114,7 +123,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   _addDateBar() {
-    final theme = Theme.of(context);
+    //  final theme = Theme.of(context);
     return Container(
       margin: const EdgeInsets.only(left: 20, top: 12),
       child: SizedBox(
@@ -159,33 +168,52 @@ class _HomePageState extends State<HomePage> {
 
   _showTasks() {
     return Expanded(
-      child: ListView.builder(
-        scrollDirection: SizeConfig.orientation == Orientation.landscape
-            ? Axis.horizontal
-            : Axis.vertical,
-        itemBuilder: (context, index) {
-          var task = _taskController.taskList[index];
-          return AnimationConfiguration.staggeredList(
-            position: index,
-            duration: const Duration(milliseconds: 500),
-            child: SlideAnimation(
-              horizontalOffset: 300,
-              child: FadeInAnimation(
-                child: GestureDetector(
-                  onTap: () {
-                    showButtomSheet(context, task);
-                  },
-                  child: TaskTile(task: task),
-                ),
-              ),
+      child: Obx(() {
+        if (_taskController.taskList.isEmpty) {
+          return _noTaskMsg();
+        } else {
+          return RefreshIndicator(
+            onRefresh: _onRefresh,
+            child: ListView.builder(
+              scrollDirection: SizeConfig.orientation == Orientation.landscape
+                  ? Axis.horizontal
+                  : Axis.vertical,
+              itemBuilder: (context, index) {
+                var task = _taskController.taskList[index];
+
+                if (task.repeat == 'Daily' ||
+                    task.date == DateFormat.yMd().format(_selectedDate)) {
+                  return AnimationConfiguration.staggeredList(
+                    position: index,
+                    duration: const Duration(milliseconds: 500),
+                    child: SlideAnimation(
+                      horizontalOffset: 300,
+                      child: FadeInAnimation(
+                        child: GestureDetector(
+                          onTap: () {
+                            showButtomSheet(context, task);
+                          },
+                          child: TaskTile(task: task),
+                        ),
+                      ),
+                    ),
+                  );
+                }else {
+                  return Container();
+                }
+              },
+              itemCount: _taskController.taskList.length,
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
             ),
           );
-        },
-        itemCount: _taskController.taskList.length,
-        shrinkWrap: true,
-        physics: const BouncingScrollPhysics(),
-      ),
+        }
+      }),
     );
+  }
+
+  Future<void> _onRefresh() async {
+    await _taskController.getTasks();
   }
 
   _noTaskMsg() {
@@ -194,31 +222,34 @@ class _HomePageState extends State<HomePage> {
         AnimatedPositioned(
           duration: const Duration(milliseconds: 5000),
           // curve: Curves.bounceInOut,
-          child: SingleChildScrollView(
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              direction: Axis.vertical,
-              children: [
-                SizedBox(height: 120),
-                SvgPicture.asset(
-                  'images/task.svg',
-                  height: 110,
-                  semanticsLabel: 'Task',
-                  color: primaryClr.withOpacity(.5),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 30,
-                    vertical: 20,
+          child: RefreshIndicator(
+            onRefresh: _onRefresh,
+            child: SingleChildScrollView(
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                direction: Axis.vertical,
+                children: [
+                  SizedBox(height: 120),
+                  SvgPicture.asset(
+                    'images/task.svg',
+                    height: 110,
+                    semanticsLabel: 'Task',
+                    color: primaryClr.withOpacity(.5),
                   ),
-                  child: Text(
-                    'you have no tasks yet!\nadd new tasks to make your days productive',
-                    style: subtitleStyle,
-                    textAlign: TextAlign.center,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 30,
+                      vertical: 20,
+                    ),
+                    child: Text(
+                      'you have no tasks yet!\nadd new tasks to make your days productive',
+                      style: subtitleStyle,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -264,6 +295,7 @@ _builedButtomSheet({
 }
 
 showButtomSheet(BuildContext context, Task task) {
+  final TaskController _taskController = Get.put(TaskController());
   Get.bottomSheet(
     Container(
       padding: const EdgeInsets.only(top: 4),
@@ -287,7 +319,7 @@ showButtomSheet(BuildContext context, Task task) {
                 : _builedButtomSheet(
                     label: 'Task Completed',
                     onTap: () {
-                      // _taskController.markTaskCompleted(task.id!);
+                      _taskController.markTaskCompleted(task.id!);
                       Get.back();
                     },
                     color: primaryClr,
@@ -295,7 +327,7 @@ showButtomSheet(BuildContext context, Task task) {
             _builedButtomSheet(
               label: 'Delete Task',
               onTap: () {
-                // _taskController.deleteTask(task.id!);
+                _taskController.deleteTask(task);
                 Get.back();
               },
               color: primaryClr,

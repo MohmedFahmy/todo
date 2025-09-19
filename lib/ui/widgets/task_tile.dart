@@ -3,8 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:todo/models/task.dart';
 import 'package:todo/ui/size_config.dart';
 
-
-
 class TaskTile extends StatelessWidget {
   const TaskTile({Key? key, required this.task}) : super(key: key);
   final Task task;
@@ -112,13 +110,13 @@ class TaskTile extends StatelessWidget {
       case 0:
         return const Color(0xFF4CAF50); // أخضر جميل;
       case 1:
-        return const Color(0xFF009688);
+        return const Color.fromARGB(255, 1, 100, 90);
       case 2:
-        return Color.fromARGB(255, 22, 102, 167) ;
+        return Colors.blueGrey[500];
       case 3:
-        return const Color(0xFF7C4DFF);
+        return Colors.teal[400];
       default:
-        return Color.fromARGB(255, 22, 102, 167) ;
+        return Color.fromARGB(255, 22, 102, 167);
     }
   }
 }
