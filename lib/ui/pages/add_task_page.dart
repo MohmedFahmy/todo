@@ -267,7 +267,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 backgroundColor: index == 0
                     ? const Color(0xFF4CAF50) // أخضر جميل
                     : index == 1
-                    ?  Color.fromARGB(255, 1, 100, 90) // Teal (أخضر مزرق)
+                    ? Colors.indigoAccent[400] // Teal (أخضر مزرق)
                     : index == 2
                     ? Colors.blueGrey[500] // أزرق سماوي
                     : Colors.teal[400], // بنفسجي مزرق خفيف (Lavender)
