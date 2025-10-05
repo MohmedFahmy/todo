@@ -55,7 +55,7 @@ Light theme
 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/todo-app.git
+git clone https://github.com/MohmedFahmy/todo.git
 ```
 
 2. Install dependencies
